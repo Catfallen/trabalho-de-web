@@ -6,28 +6,8 @@ let dayOfWeek = today.getDay();
 // Array de dias da semana
 
 let c = dayOfWeek;
-[...document.querySelectorAll(".slider-container")[0].getElementsByClassName("slide")].forEach(slide => {
-    //slide.innerText = days[c];
-    //c+= 1
-    slide.addEventListener('click', (event) => {
-        console.log("preto");
-        console.log(event.target.innerText)
-        let slideIndex = slides.indexOf(slide);
-        console.log(slideIndex);
-        if (slideIndex >=0  && slideIndex < 2){
-             // Remove a classe 'active' de todas as slides
-            document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
-            servicos = 0;
-            // Adiciona a classe 'active' apenas na slide clicada
-            slide.classList.add('active');
-        } else if(slideIndex >= 2 && slideIndex <= slides.length){
-            slides[0].classList.remove("active");
-            slides[1].classList.remove("active");
-            slide.classList.add('active');
-            servicos.push(slide);
-        }
-    });
-});
+
+
 
 /*
 document.querySelectorAll('.time-slot').forEach(slot => {
@@ -85,7 +65,7 @@ spans[2].innerText = mes;
 
 //const horarios = document.getElementsByClassName("time-slot");
 function checkAtivate(){
-    return slides.filter(slide =>
+    return [...document.getElementsByClassName("slider")[0].getElementsByClassName("slide")].filter(slide =>
         slide.classList.contains("active")
     );
 }
@@ -243,3 +223,39 @@ async function fetchServices() {
         console.error("Erro ao consumir a API:", error);
     }
 }
+
+
+
+
+async function createUser(){
+    let input = document.getElementById("cellphone").value;
+    let email = document.getElementById("email").value;
+    const data = {
+        nome: document.getElementsByClassName("name")[0].innerText,
+        celular: input,
+        email: email
+    }
+    try{
+        const response = await fetch('http://localhost:3000/api/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        
+        if (!response.ok) {
+            throw new Error('Erro ao criar usuário');
+        }
+
+        const result = await response.json();
+        console.log('Usuário criado com sucesso:', result);
+        clienteId = result.id;
+        return result; // Retorna os dados recebidos da resposta
+    } catch (error) {
+        console.error('Erro ao criar usuário:', error);
+        return null; // Retorna null em caso de erro
+    }
+}
+
+

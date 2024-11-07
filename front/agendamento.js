@@ -18,6 +18,14 @@ linkMain.addEventListener('click', (e) => {
     mainSection.style.display = 'block';
 });
 
+document.getElementById('cellphone').addEventListener('input', function(e) {
+    let value = e.target.value.replace(/\D/g, ''); // Remove caracteres não numéricos
+    value = value.replace(/^(\d{2})(\d)/g, '($1) $2'); // Adiciona os parênteses e espaço após DDD
+    value = value.replace(/(\d{5})(\d)/, '$1-$2'); // Adiciona o hífen após os primeiros 5 dígitos
+    e.target.value = value;
+});
+
+
 
 
 

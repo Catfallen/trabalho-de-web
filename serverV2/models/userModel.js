@@ -1,4 +1,5 @@
 const pool = require("../config/config.js")
+const flatted = require("flatted")
 const User = {
     getById: async(id)=>{
         const result = await pool.query("select * from clientes where id = $1",[id]);
@@ -24,8 +25,15 @@ const User = {
         return result.rows;
     },
     
-    postNewUser: async(nome,celular)=>{
-        const result = await pool.query("insert into clientes (nome,celular) VALUES ($1,$2) RETURNING * ",[nome,celular]);
+    postAgendamento: async(idCliente, idHorario, servicos) => {
+        const result = await pool.query(
+            'INSERT INTO agendamento (idcliente, idhorario, servicos) VALUES ($1, $2, $3) RETURNING idagendamento',
+            [idCliente, idHorario, servicos]
+        );
+        return result.rows[0]
+    },
+    postNewUser: async(nome,celular,email)=>{
+        const result = await pool.query("insert into clientes (nome,celular,email) VALUES ($1,$2,$3) RETURNING * ",[nome,celular,email]);
         return result.rows[0];
     },updateHorario: async (data, hora) => {
         const result = await pool.query(
@@ -55,6 +63,32 @@ const User = {
             }
         } catch (error) {
             console.error("Erro ao inserir horários:", error);
+        }
+    },
+    getAgendamentoById: async (clientId) => {
+        try {
+            const query = `
+                SELECT 
+                    clientes.id, 
+                    clientes.nome,
+                    clientes.celular,
+                    horarios.dia,
+                    horarios.horas,
+                    agendamento.servicos AS servicoNome
+                FROM 
+                    agendamento
+                JOIN 
+                    clientes ON agendamento.idCliente = clientes.id 
+                JOIN 
+                    horarios ON agendamento.idHorario = horarios.id
+                WHERE 
+                    agendamento.idCliente = $1;
+            `;
+            const result = await pool.query(query, [clientId]);
+            return result.rows; // Retorna os resultados da consulta
+        } catch (err) {
+            console.error(err);
+            throw new Error('Error retrieving user details');
         }
     }
 }

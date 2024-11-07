@@ -1,4 +1,5 @@
 const User = require("../models/userModel.js");
+const util = require("util");
 
 const UserController = {
     getUserById: async (req, res) => {
@@ -58,9 +59,9 @@ const UserController = {
     }
     ,
     createUser: async (req, res) => {
-        const { nome, celular } = req.body;
+        const { nome, celular,email } = req.body;
         try {
-            const newUser = await User.postNewUser(nome, celular);
+            const newUser = await User.postNewUser(nome, celular,email);
             res.status(201).json(newUser);  // 201 Created
         } catch (error) {
             console.error(error);
@@ -115,6 +116,29 @@ const UserController = {
         } catch (error) {
             console.error("Erro ao gerar horários:", error);
             res.status(500).json({ message: "Erro ao gerar horários." });
+        }
+    },
+    postAgendamento: async (req, res) => {
+        const { idcliente, idhorario,servicos } = req.body;
+        try {
+            const newAgendamento = await User.postAgendamento(idcliente,idhorario,servicos);
+            res.status(201).json(newAgendamento);  // 201 Created
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Erro ao criar novo usuário' });
+        }   
+    },
+    getAgendamentoById: async (req, res) => {
+        try {
+            const clientId = parseInt(req.params.idCliente); // Obtém o idCliente da URL
+            const userDetails = await User.getAgendamentoById(clientId); // Chama o modelo para pegar os detalhes
+            if (userDetails.length === 0) {
+                return res.status(404).json({ message: 'Client not found' });
+            }
+            res.json(userDetails); // Retorna os detalhes do cliente como resposta
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ message: 'Server error' });
         }
     }
 };

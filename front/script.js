@@ -1,5 +1,4 @@
-//intro();
-getCellphone();
+intro();
 const main = document.getElementsByClassName("main")[0];
 const slide = document.getElementById("slide");
 
@@ -7,7 +6,7 @@ const p = document.getElementById("date");
 const spans = p.getElementsByTagName("span");
 
 const slides = [...document.querySelectorAll(".slider-container")[0].querySelectorAll(".slide")];
-const timeSlots = [...document.getElementsByClassName("time-slot")]; 
+const timeSlots = [...document.getElementsByClassName("time-slot")];
 const semanaDiv = document.querySelectorAll(".slider-container")[1];
 
 const data = new Date();
@@ -17,7 +16,7 @@ const meses = [
     "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
 ];
 
-const days = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado","Domingo", "Segunda-feira","Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
+const days = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado", "Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
 // Obtendo o nome do dia da semana
 //const dayName = days[dayOfWeek];
 
@@ -28,7 +27,8 @@ const days = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quint
 var servicos = []
 var horario = []
 var diasObj = []
-
+var horarioId;
+var clienteId;
 //getServices();
 
 //services("markim");
@@ -47,6 +47,7 @@ function inputName() {
     div.style.display = "flex";
     document.getElementById("btn1").addEventListener("click", function (event) {
         if (document.getElementById("name").value) {
+            getServices();
             let name = document.getElementById('name').value;
             main.removeChild(div);
             services(name);
@@ -73,13 +74,14 @@ function services(nome) {
     //console.log(document.getElementsByClassName("input")[1])//style.display = 'flex';
     let input3 = document.getElementsByName("input3")[0]
     input3.style.display = "flex";
-
-    input3.getElementsByTagName("button")[0].addEventListener("click", () => {
+    console.log("preot");
+    document.getElementById("btn3").addEventListener("click", () => {
+        console.log("sim sim true")
         if (checkAtivate().length > 0) {
             servicos = checkAtivate()
-            horarios()
+            horarios();
         }
-        
+
     });
 
 }
@@ -90,25 +92,26 @@ function getServices(){
 }
 */
 
-function putHorarios(dataString,horaString){
-    console.log(dataString,horaString);
-    fetch("http://localhost:3000/api/horarios",{
+function putHorarios(dataString, horaString) {
+    console.log(dataString, horaString);
+    fetch("http://localhost:3000/api/horarios", {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            data:dataString,
-            hora:horaString
+            data: dataString,
+            hora: horaString
         })
-    }).then(response=>response.json()).then(data=>{
+    }).then(response => response.json()).then(data => {
         console.log(data);
-        if(data.horarioId){
-            console.log('Horário atualizado com sucesso, ID:'+ data.horarioId);
-        }else{
+        if (data.horarioId) {
+            console.log('Horário atualizado com sucesso, ID:' + data.horarioId);
+            horarioId = data.horarioId;
+        } else {
             console.log(data.message);
         }
-    }).catch(error => console.error("erro",error));
+    }).catch(error => console.error("erro", error));
 }
 
 function horarios() {
@@ -129,44 +132,91 @@ function horarios() {
 
     let agendamentodiv = document.getElementsByClassName("agendamento")[0]
     agendamentodiv.style.display = "flex";
-    agendamentodiv.querySelector("button").addEventListener("click",()=>{
+    agendamentodiv.querySelector("button").addEventListener("click", () => {
         let dt = new Date()
         dt.setDate(checkDayAtivate().querySelectorAll("span")[1].innerText);
-        let string = `${dt.getFullYear()}-${dt.getMonth()+1}-${dt.getDate()}`;
-        let horas = spans[3].innerText.replace(":","");
+        let string = `${dt.getFullYear()}-${dt.getMonth() + 1}-${dt.getDate()}`;
+        let horas = spans[3].innerText.replace(":", "");
         console.log(horas);
         console.log(string);
-        
-        putHorarios(string,horas);
+
+        putHorarios(string, horas);
         document.getElementsByClassName("agendamento")[0].style.display = "none";
         document.getElementsByClassName("user")[2].innerHTML = `<p class = 'name'>${p.innerText}</p>`;
-        getCellphone();    
+        getCellphone();
     });
 }
 
 
-function getCellphone(){
-    document.getElementsByClassName("bot")[3].style.display = "flex";
+function getCellphone() {
+    document.getElementsByClassName("bot")[3].style.display = "block";
+    let input2 = document.getElementsByClassName("input")[2]
+    input2.style.display = "flex";  
+    input2.getElementsByTagName("button")[0].addEventListener("click",function(){
+        postAgendamento()    
+    })
+
+}
+
+function postAgendamento(){
+    createUser(); 
+
+
+
+
+    let final = document.querySelector(".bot.final")
+    final.innerHTML = `<p>Perfeito...</p>
+    <p>Agendamento realizado</p>
+    <p></p>
+    `
+    final.style.display = "flex";
 }
 
 
-async function getServices(){
+
+
+
+async function getServices() {
     let slider = document.getElementsByClassName("slider")[0];
     const data = await fetchServices();
     slider.innerHTML = "";
-    for(let i = 0;i< data.length;i++){
+
+    for (let i = 0; i < data.length; i++) {
         let d = data[i];
-        
         let div = document.createElement("div");
-        div.setAttribute("class","slide");
+        div.setAttribute("class", "slide");
         div.innerHTML = `
                     <img src="${d.id}" alt="">
                     <p>${d.nome}</p>
                     <p class="bet"><span>${d.valor}</span><span>${d.tempo}</span></p>
-                `
+                `;
+
         slider.appendChild(div);
     }
-    return data;
+    let slides = [...document.getElementsByClassName("slider")[0].querySelectorAll(".slide")];
+    [...document.querySelectorAll(".slider-container")[0].getElementsByClassName("slide")].forEach(slide => {
+        slide.addEventListener('click', (function () {
+            console.log(this);
+            let slideIndex = slides.indexOf(this);
+            console.log(slideIndex);
+            if (this.classList.contains("active")) {
+                this.classList.remove("active");
+            } else {
+                if (slideIndex >= 0 && slideIndex < 2) {
+                    // Remove a classe 'active' de todas as slides
+                    document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+                    servicos = 0;
+                    // Adiciona a classe 'active' apenas na slide clicada
+                    this.classList.add('active');
+                } else if (slideIndex >= 2 && slideIndex <= slides.length) {
+                    slides[0].classList.remove("active");
+                    slides[1].classList.remove("active");
+                    this.classList.add('active');
+                }
+            }
+        }));
+    });
+    //return data;
 }
 
 

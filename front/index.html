@@ -18,23 +18,18 @@
             <p>Qual o seu nome? Escreva seu nome e sobrenome, por favor.</p>
         </div>
         <div class="input" style="display: none;">
-            <input id='name' type='text' placeholder="Seu nome e sobrenome"><button id='btn1'>Enviar</button>
+            <input id='name' type='text' placeholder="Seu nome e sobrenome">
+            <button id='btn1'>Enviar</button>
         </div>
-
         <div class="user" style="display: none;">
         </div>
 
         <div class="bot">
 
         </div>
-
+        
         <div id="slide" class="slider-container" style="display: none;">
             <div class="slider">
-                <div class="slide">
-                    <img src="id" alt="">
-                    <p>nome</p>
-                    <p class="bet"><span>valor</span><span>tempo</span></p>
-                </div>
                 <div class="slide"><img src="combo.png" alt="">
                     <p>CORTE + BARBA + HIDRATAÇÃO + SOBRANCELHA + LIMPEZA DE PELE</p>
                     <p class="bet"><span>R$ 100,00</span><span>1hr10min</span></p>
@@ -111,20 +106,26 @@
 
         </div>
         <div class="bot" style="display: none;">
-            <p>Perfeito</p>
+            <p>Informe seu email e número de telefone</p>
+        </div>
+        <div class="input" style="display: none;">
+            <input type='text' id = "cellphone" placeholder="(XX) XXXXX-XXXX" maxlength="15">
+            <input type="email" name="" id="email" placeholder="Digite seu email">
+            <button id='btn1'>Enviar</button>
+        </div>
+        <div class="bot final" style="display: none;">
+            <p>perfeito</p>
         </div>
         <div class="input" style="display: none;">
             <button>Meus agendamentos</button>
             <button>Novo agendamento</button>
         </div>
     </div>
-    
-    
-    
     <div class="agendamentos" id="agendamentos" style="display: none;">
         <a href="#main" class="link-main">Voltar para a Página Principal</a>
         <p>Conteúdo da seção de agendamentos...</p>
     </div>
+
     <script src="script.js"></script>
     <script src="slide.js"></script>
     <script src="agendamento.js"></script>

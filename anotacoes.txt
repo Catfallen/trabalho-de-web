@@ -1,3 +1,21 @@
+SELECT 
+    clientes.id, 
+    clientes.nome,
+    clientes.celular,
+    horarios.dia,
+    horarios.horas,
+    agendamento.servicos AS servicoNome
+FROM 
+    agendamento
+JOIN 
+    clientes ON agendamento.idCliente = clientes.id 
+JOIN 
+    horarios ON agendamento.idHorario = horarios.id
+WHERE 
+    agendamento.idCliente = 6;
+
+
+
 
 
 
