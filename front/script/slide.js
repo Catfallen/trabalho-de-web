@@ -311,3 +311,76 @@ async function postNewAgendamento(idcliente, idhorario, servicos) {
     }
 }
 
+async function handleUserCreation(nome, input, email) {
+    try {
+        const result = await createUser(nome, input, email);
+
+        if (result) {
+            const clienteId = result.id;
+            console.log("ID do cliente: " + clienteId);
+
+            // Evita manipulação excessiva do DOM em loop
+            let inputPut = document.querySelector(".input.put");
+            if (inputPut) {
+                inputPut.style.display = "none";
+            }
+
+            let userPut = document.querySelector(".user.put");
+            if (userPut) {
+                userPut.innerHTML = `<p class="name">${email} - ${input}</p>`;
+                userPut.style.display = "flex";
+            }
+
+            let servicosPut = checkAtivate().map(el => el.getAttribute("id")).join("-");
+            console.log(clienteId, horarioId);
+
+            let servicosGet = document.querySelector(".name.getServices")?.innerText || "Serviço não especificado";
+            let horariosGet = document.querySelector(".name.getHorario")?.innerText || "Horário não especificado";
+
+            let final = document.querySelector(".bot.final");
+            if (final) {
+                final.innerHTML = `<p>Perfeito...</p><p>Agendamento realizado: ${servicosGet}, ${horariosGet}. Local: Av Santa Luzia, 110</p><p>Muito obrigado, até mais!</p>`;
+                final.style.display = "block";
+            }
+
+            // Certifique-se de que `horarioId` está definido corretamente
+            if (clienteId && horarioId) {
+                try {
+                    let old = clienteId;
+                    agendamentoId = await postNewAgendamento(clienteId, horarioId, servicosPut);
+                    console.log("ID do agendamento criado:", agendamentoId);
+                    displayAgendamentos(old);
+                } catch (error) {
+                    console.error("Erro ao criar agendamento:", error);
+                }
+            }
+        }
+    } catch (error) {
+        console.error("Erro ao criar usuário:", error);
+    }
+}
+
+
+async function getAgendamentosById(idCliente) {
+    const url = `http://localhost:3000/api/agendamentos/id/${idCliente}`
+  //const url = `http://localhost:3000/agendamentos/id/${idCliente}`;
+    
+    try {
+        const response = await fetch(url, {
+            method: 'GET', // Método GET
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Erro ao buscar agendamentos para o cliente ${idCliente}`);
+        }
+        
+        const data = await response.json(); // Supondo que a resposta seja um JSON
+        console.log('Agendamentos:', data);
+        return data; // Retorna os dados dos agendamentos
+    } catch (error) {
+        console.error('Erro:', error);
+    }
+}

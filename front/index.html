@@ -7,6 +7,7 @@
     <title>Document</title>
     <link rel="stylesheet" href="sytle.css">
     <link rel="stylesheet" href="slide.css">
+    <link rel="stylesheet" href="agendamento.css">
 </head>
 
 <body>
@@ -22,6 +23,7 @@
             <button id='btn1'>Enviar</button>
         </div>
         <div class="user" style="display: none;">
+
         </div>
 
         <div class="bot">
@@ -72,7 +74,9 @@
         <div class="input" id="input3" style="display: none;" name="input3">
             <button id='btn3'>Enviar</button>
         </div>
-        <div class="user" style="display: none;"></div>
+        <div class="user" style="display: none;">
+
+        </div>
         <div class="bot" style="display: none;"><p>Certo, e qual o melhor dia e horário para você ser atendido?</p></div>
         <div class="agendamento">
             
@@ -102,7 +106,7 @@
                 <button id='btn4'>Enviar</button>
             </div>
         </div>
-        <div class="user" style="display: flex;">
+        <div class="user horarioGet" style="display: flex;">
 
         </div>
         <div class="bot put" style="display: none;">
@@ -114,24 +118,41 @@
             <button id='btn1'>Enviar</button>
         </div>
         <div class="user put">
-            
+
         </div>
         <div class="bot final" style="display: none;">
             <p>perfeito</p>
         </div>
-        <div class="input" style="display: none;">
+        <div class="input final" style="display: none;">
             <button>Meus agendamentos</button>
             <button>Novo agendamento</button>
         </div>
     </div>
     <div class="agendamentos" id="agendamentos" style="display: none;">
         <a href="#main" class="link-main">Voltar para a Página Principal</a>
-        <p>Conteúdo da seção de agendamentos...</p>
+        <div class="container">
+            <h1>Agendamentos</h1>
+            <table id="agendamentos-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Celular</th>
+                        <th>Dia</th>
+                        <th>Horas</th>
+                        <th>Serviço</th>
+                    </tr>
+                </thead>
+                <tbody id="agendamentos-list">
+                    <!-- Os dados dos agendamentos serão inseridos aqui -->
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <script src="script.js"></script>
-    <script src="slide.js"></script>
-    <script src="agendamento.js"></script>
+    <script src="./script/script.js"></script>
+    <script src="./script/slide.js"></script>
+    <script src="./script/agendamento.js"></script>
 </body>
 
 </html>

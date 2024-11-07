@@ -29,6 +29,7 @@ var horario = []
 var diasObj = []
 var horarioId;
 var clienteId;
+var agendamentoId;
 //getServices();
 
 //services("markim");
@@ -127,7 +128,7 @@ function horarios() {
     document.getElementsByClassName("bot")[2].style.display = "block";
     let divName = document.getElementsByClassName("user")[1];
 
-    divName.innerHTML = `<p class = 'name'>${text}</p>`;
+    divName.innerHTML = `<p class = 'name getServices'>${text}</p>`;
     divName.style.display = "flex";
 
     let agendamentodiv = document.getElementsByClassName("agendamento")[0]
@@ -142,7 +143,7 @@ function horarios() {
 
         putHorarios(string, horas);
         document.getElementsByClassName("agendamento")[0].style.display = "none";
-        document.getElementsByClassName("user")[2].innerHTML = `<p class = 'name'>${p.innerText}</p>`;
+        document.getElementsByClassName("user")[2].innerHTML = `<p class = 'name getHorario'>${p.innerText}</p>`;
         getCellphone();
     });
 }
@@ -162,51 +163,16 @@ function getCellphone() {
 function postAgendamento() {
     let nome, input, email;
 
-    input = document.getElementById("cellphone").value;
-    email = document.getElementById("email").value;
-    nome = document.getElementsByClassName("name")[0].innerText
+    //input = document.getElementById("cellphone").value;
+    //email = document.getElementById("email").value;
+    //nome = document.getElementsByClassName("name")[0].innerText
 
-    //nome = "markim"
-    //input = "999999999999"
-    //email = "markim"
-
-    createUser(nome, input, email).then(result => {
-        if (result) {
-            const clienteId = result.id;
-            console.log("id do cliente: " + clienteId);
-            
-            // Evita manipulação excessiva do DOM em loop
-            let inputPut = document.querySelector(".input.put");
-            if (inputPut) {
-                inputPut.style.display = "none";
-            }
-    
-            let userPut = document.querySelector(".user.put");
-            if (userPut) {
-                userPut.innerHTML = `<p class="name">${email} - ${input}</p>`;
-                userPut.style.display = "flex";
-            }
-    
-            let servicosPut = checkAtivate().map(el => el.getAttribute("id")).join("-").toString();
-            console.log(clienteId, horarioId);
-    
-            let final = document.querySelector(".bot.final");
-            if (final) {
-                final.innerHTML = `<p>Perfeito...</p><p>Agendamento realizado:</p><p></p>`;
-                final.style.display = "block";
-            }
-    
-            // Certifique-se de que `horarioId` está definido corretamente
-            if (clienteId && horarioId) {
-                postNewAgendamento(clienteId, horarioId, servicosPut);
-            }
-        }
-    });
-    
-
-
+    nome = "markim"
+    input = "999999999999"
+    email = "markim"
+    handleUserCreation(nome,input,email);
+    document.querySelector(".input.final").style.display = "flex";
 }
-
 
 
 
