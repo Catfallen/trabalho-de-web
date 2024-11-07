@@ -158,12 +158,9 @@ function getCellphone() {
 
 }
 
+
 function postAgendamento(){
-    createUser(); 
-
-
-
-
+    createUser();
     let final = document.querySelector(".bot.final")
     final.innerHTML = `<p>Perfeito...</p>
     <p>Agendamento realizado</p>

@@ -42,8 +42,8 @@ const User = {
         );
         return result.rows[0];
     },
-    putUser : async(nome,celular) =>{
-        const result = await pool.query("update clientes set nome = $1 where celular = $2 RETURNING *",[nome,celular]);
+    putUser : async(nome,celular,email) =>{
+        const result = await pool.query("update clientes set nome = $1, email = $3 where celular = $2 RETURNING *",[nome,celular,email]);
         return result.rows[0];
     },
     gerarHorarios: async (dia) => {

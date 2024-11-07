@@ -85,14 +85,15 @@ const UserController = {
         }
     },
     updateUser: async (req,res)=>{
-        const {nome,celular} = req.body;
+        const {nome,celular,email} = req.body;
         try{
-            const updatedUser = await User.putUser(nome,celular);
+            const updatedUser = await User.putUser(nome,celular,email);
             if (updatedUser){
                 res.status(200).json({
                     message: "Nome atualizado",
                     id: updatedUser.id,
-                    userCell:updatedUser.celular
+                    userCell:updatedUser.celular,
+                    email:updatedUser.email
                 });
             }else{
                 res.status(404).json({message:"usuario não encontrado"});

@@ -38,46 +38,46 @@ let novaData = new Date();
 let mes = data.getMonth();
 spans[2].innerText = mes;
 //console.log(mes);
-[...semanaDiv.getElementsByClassName("slide")].forEach(el=>{
-    el.addEventListener("click",(s)=>{
-        [...semanaDiv.getElementsByClassName("slide")].forEach(s=>{
+[...semanaDiv.getElementsByClassName("slide")].forEach(el => {
+    el.addEventListener("click", (s) => {
+        [...semanaDiv.getElementsByClassName("slide")].forEach(s => {
             s.classList.remove('active');
-            
+
         });
         el.classList.add("active");
         updateHorario(checkDayAtivate());
         appendHorarios(updateHorasDiv(el));
-        
+
     });
-    
+
     el.innerHTML = `<span>${days[diacontador]}</span> <hr> <span>${novaData.getDate()}</span>`;
-    
-    let text =  `${new Date().getFullYear()}-${novaData.getMonth()+1}-${novaData.getDate()}`;
-    console.log("Texto: "+text);
+
+    let text = `${new Date().getFullYear()}-${novaData.getMonth() + 1}-${novaData.getDate()}`;
+    console.log("Texto: " + text);
     //diasObj.push(getHoras(text));
     armazenarHorarios(text);
-    el.setAttribute("id",text);
-    novaData.setDate(novaData.getDate()+1);
-    diacontador+=1;
+    el.setAttribute("id", text);
+    novaData.setDate(novaData.getDate() + 1);
+    diacontador += 1;
 });
 [...semanaDiv.getElementsByClassName("slide")][0].classList.add("active");
 //updateHorario(checkAtivate());
 
 //const horarios = document.getElementsByClassName("time-slot");
-function checkAtivate(){
+function checkAtivate() {
     return [...document.getElementsByClassName("slider")[0].getElementsByClassName("slide")].filter(slide =>
         slide.classList.contains("active")
     );
 }
 
-function checkDayAtivate(){
-    return [...semanaDiv.getElementsByClassName("slide")].find(d=>d.classList.contains("active"));
+function checkDayAtivate() {
+    return [...semanaDiv.getElementsByClassName("slide")].find(d => d.classList.contains("active"));
 }
 
 
-function checkHorario(){
+function checkHorario() {
     //console.log(timeSlots);
-    return [...document.querySelectorAll(".time-slot")].find(el=>el.classList.contains("active"));
+    return [...document.querySelectorAll(".time-slot")].find(el => el.classList.contains("active"));
 }
 
 function getMaxDiaDoMes(ano, mes) {
@@ -85,7 +85,7 @@ function getMaxDiaDoMes(ano, mes) {
     return new Date(ano, mes, 0).getDate();
 }
 
-function updateHorario(){
+function updateHorario() {
     //console.log("updtate:"+dia);
     let dia = checkDayAtivate();
     console.log(dia);
@@ -93,18 +93,18 @@ function updateHorario(){
     spans[0].innerText = text;
     let span1 = checkDayAtivate().querySelectorAll("span")[1].innerText;
     let stringSplit = dia.getAttribute("id").split("-")[1]
-    spans[1].innerText = meses[parseInt(stringSplit)-1];
+    spans[1].innerText = meses[parseInt(stringSplit) - 1];
     let ano = new Date(data.getFullYear());
     spans[2].innerText = data.getFullYear();
-    if (checkHorario()){
+    if (checkHorario()) {
 
-    spans[3].innerText = checkHorario().innerText;
+        spans[3].innerText = checkHorario().innerText;
     }
     //document.getElementsByClassName("grid-container")
     //console.log(meses.indexOf(spans[1].innerText))
-}  
+}
 
-function updateHorasDiv(el){
+function updateHorasDiv(el) {
     document.getElementsByClassName("grid-container")[0].innerHTML = "";
     //<div class="time-slot">08:00</div>
     let id = el.getAttribute("id");
@@ -113,14 +113,14 @@ function updateHorasDiv(el){
 }
 
 
-function appendHorarios(lista){
+function appendHorarios(lista) {
     let grid = document.getElementsByClassName("grid-container")[0];
     console.log(lista)
-    
-    for (const horario of lista.horarios){
+
+    for (const horario of lista.horarios) {
         //<div class="time-slot">08:00</div>
         let div = document.createElement("div");
-        div.setAttribute("class","time-slot");
+        div.setAttribute("class", "time-slot");
         div.innerText = horario.horas;
         grid.appendChild(div);
         console.log(horario.horas);
@@ -129,12 +129,12 @@ function appendHorarios(lista){
         slot.addEventListener('click', () => {
             // Remove a classe 'active' de todas as divs
             document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('active'));
-            
+
             // Adiciona a classe 'active' à div clicada
             slot.classList.add('active');
             updateHorario();
         });
-    });   
+    });
 }
 
 
@@ -173,7 +173,7 @@ async function armazenarHorarios(dia) {
     try {
         const horarios = await getHoras(dia);
         if (horarios) {
-            diaHorarios.push({"dia":dia,"horarios":horarios}); // Adiciona os horários disponíveis à lista
+            diaHorarios.push({ "dia": dia, "horarios": horarios }); // Adiciona os horários disponíveis à lista
         }
         //console.log("Lista atual de horários:", diaHorarios);
     } catch (error) {
@@ -227,15 +227,16 @@ async function fetchServices() {
 
 
 
-async function createUser(){
+async function createUser() {
     let input = document.getElementById("cellphone").value;
     let email = document.getElementById("email").value;
+    let nome = document.getElementsByClassName("name")[0].innerText
     const data = {
-        nome: document.getElementsByClassName("name")[0].innerText,
+        nome: nome,
         celular: input,
         email: email
     }
-    try{
+    try {
         const response = await fetch('http://localhost:3000/api/users', {
             method: 'POST',
             headers: {
@@ -243,7 +244,7 @@ async function createUser(){
             },
             body: JSON.stringify(data)
         });
-        
+
         if (!response.ok) {
             throw new Error('Erro ao criar usuário');
         }
@@ -254,8 +255,39 @@ async function createUser(){
         return result; // Retorna os dados recebidos da resposta
     } catch (error) {
         console.error('Erro ao criar usuário:', error);
+        putUser(nome,input,email);
         return null; // Retorna null em caso de erro
     }
 }
+
+async function putUser(nome,celular,email) {
+    const url = 'http://localhost:3000/api/users/cell';
+    const data = {
+        nome: nome,
+        celular: celular,
+        email:email
+    };
+
+    fetch(url, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    }).then(response => {
+            if (!response.ok) {
+                throw new Error(`Erro: ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Resposta do servidor:', data);
+        })
+        .catch(error => {
+            console.error('Erro ao fazer a requisição PUT:', error);
+        });
+
+}
+
 
 
