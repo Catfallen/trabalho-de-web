@@ -151,22 +151,60 @@ function horarios() {
 function getCellphone() {
     document.getElementsByClassName("bot")[3].style.display = "block";
     let input2 = document.getElementsByClassName("input")[2]
-    input2.style.display = "flex";  
-    input2.getElementsByTagName("button")[0].addEventListener("click",function(){
-        postAgendamento()    
+    input2.style.display = "flex";
+    input2.getElementsByTagName("button")[0].addEventListener("click", function () {
+        postAgendamento()
     })
 
 }
 
 
-function postAgendamento(){
-    createUser();
-    let final = document.querySelector(".bot.final")
-    final.innerHTML = `<p>Perfeito...</p>
-    <p>Agendamento realizado</p>
-    <p></p>
-    `
-    final.style.display = "flex";
+function postAgendamento() {
+    let nome, input, email;
+
+    input = document.getElementById("cellphone").value;
+    email = document.getElementById("email").value;
+    nome = document.getElementsByClassName("name")[0].innerText
+
+    //nome = "markim"
+    //input = "999999999999"
+    //email = "markim"
+
+    createUser(nome, input, email).then(result => {
+        if (result) {
+            const clienteId = result.id;
+            console.log("id do cliente: " + clienteId);
+            
+            // Evita manipulação excessiva do DOM em loop
+            let inputPut = document.querySelector(".input.put");
+            if (inputPut) {
+                inputPut.style.display = "none";
+            }
+    
+            let userPut = document.querySelector(".user.put");
+            if (userPut) {
+                userPut.innerHTML = `<p class="name">${email} - ${input}</p>`;
+                userPut.style.display = "flex";
+            }
+    
+            let servicosPut = checkAtivate().map(el => el.getAttribute("id")).join("-").toString();
+            console.log(clienteId, horarioId);
+    
+            let final = document.querySelector(".bot.final");
+            if (final) {
+                final.innerHTML = `<p>Perfeito...</p><p>Agendamento realizado:</p><p></p>`;
+                final.style.display = "block";
+            }
+    
+            // Certifique-se de que `horarioId` está definido corretamente
+            if (clienteId && horarioId) {
+                postNewAgendamento(clienteId, horarioId, servicosPut);
+            }
+        }
+    });
+    
+
+
 }
 
 
@@ -182,6 +220,7 @@ async function getServices() {
         let d = data[i];
         let div = document.createElement("div");
         div.setAttribute("class", "slide");
+        div.setAttribute("id", d.id);
         div.innerHTML = `
                     <img src="${d.id}" alt="">
                     <p>${d.nome}</p>

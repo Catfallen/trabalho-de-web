@@ -224,18 +224,12 @@ async function fetchServices() {
     }
 }
 
-
-
-
-async function createUser() {
-    let input = document.getElementById("cellphone").value;
-    let email = document.getElementById("email").value;
-    let nome = document.getElementsByClassName("name")[0].innerText
+async function createUser(nome, input, email) {
     const data = {
         nome: nome,
         celular: input,
         email: email
-    }
+    };
     try {
         const response = await fetch('http://localhost:3000/api/users', {
             method: 'POST',
@@ -251,43 +245,69 @@ async function createUser() {
 
         const result = await response.json();
         console.log('Usuário criado com sucesso:', result);
-        clienteId = result.id;
+        const clienteId = result.id; // Atualiza clienteId aqui
         return result; // Retorna os dados recebidos da resposta
     } catch (error) {
         console.error('Erro ao criar usuário:', error);
-        putUser(nome,input,email);
-        return null; // Retorna null em caso de erro
+        return await putUser(nome, input, email); // Chama putUser e espera a resposta
     }
 }
 
-async function putUser(nome,celular,email) {
+async function putUser(nome, celular, email) {
     const url = 'http://localhost:3000/api/users/cell';
     const data = {
         nome: nome,
         celular: celular,
-        email:email
+        email: email
     };
 
-    fetch(url, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    }).then(response => {
-            if (!response.ok) {
-                throw new Error(`Erro: ${response.statusText}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Resposta do servidor:', data);
-        })
-        .catch(error => {
-            console.error('Erro ao fazer a requisição PUT:', error);
+    try {
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
         });
 
+        if (!response.ok) {
+            throw new Error(`Erro: ${response.statusText}`);
+        }
+
+        const dataResponse = await response.json();
+        console.log('Resposta do servidor:', dataResponse);
+        return dataResponse; // Retorna os dados de resposta para uso posterior
+    } catch (error) {
+        console.error('Erro ao fazer a requisição PUT:', error);
+    }
 }
 
+async function postNewAgendamento(idcliente, idhorario, servicos) {
+    const url = 'http://localhost:3000/api/agendamento';
+    const data = {
+        idcliente: idcliente,
+        idhorario: idhorario,
+        servicos: servicos // Servicos é tratado como uma string
+    };
 
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            throw new Error(`Erro ao criar agendamento: ${response.statusText}`);
+        }
+
+        const result = await response.json();
+        console.log('Agendamento criado com sucesso:', result);
+        return result;
+    } catch (error) {
+        console.error('Erro ao criar agendamento:', error);
+    }
+}
 
